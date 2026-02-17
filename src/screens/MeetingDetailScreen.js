@@ -77,6 +77,19 @@ const MeetingDetailScreen = ({ route, navigation }) => {
     }
   };
 
+  const handleStartVideoCall = () => {
+    if (!userData) {
+      Alert.alert('Error', 'User data not available');
+      return;
+    }
+    navigation.navigate('VideoCall', {
+      meetingId,
+      meetingTitle: meeting.title,
+      currentUserId: userData.id,
+      currentUserName: userData.full_name,
+    });
+  };
+
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -161,7 +174,7 @@ const MeetingDetailScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.callButton}
-              onPress={() => Alert.alert('Info', 'Video call feature coming soon')}
+              onPress={handleStartVideoCall}
             >
               <Text style={styles.callButtonText}>Start Video Call</Text>
             </TouchableOpacity>

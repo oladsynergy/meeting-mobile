@@ -110,4 +110,44 @@ export const attendanceAPI = {
 export const healthCheck = () =>
   api.get('/health');
 
+// WebRTC Signaling Socket
+let signalingSocket = null;
+
+export const getSignalingSocket = () => {
+  if (!signalingSocket) {
+    const io = require('socket.io-client').default || require('socket.io-client');
+    const SIGNALING_SERVER_URL = process.env.REACT_APP_SIGNALING_SERVER_URL || 
+      'https://meeting-signaling-server-production.up.railway.app';
+    
+    signalingSocket = io(SIGNALING_SERVER_URL, {
+      transport: ['websocket'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
+    });
+
+    signalingSocket.on('connect', () => {
+      console.log('[Socket.io] Connected to signaling server');
+    });
+
+    signalingSocket.on('disconnect', () => {
+      console.log('[Socket.io] Disconnected from signaling server');
+    });
+
+    signalingSocket.on('error', (error) => {
+      console.error('[Socket.io] Error:', error);
+    });
+  }
+
+  return signalingSocket;
+};
+
+export const disconnectSignaling = () => {
+  if (signalingSocket) {
+    signalingSocket.disconnect();
+    signalingSocket = null;
+  }
+};
+
 export default api;

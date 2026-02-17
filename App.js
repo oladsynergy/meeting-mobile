@@ -14,6 +14,7 @@ import MeetingDetailScreen from './src/screens/MeetingDetailScreen';
 import MembersScreen from './src/screens/MembersScreen';
 import AttendanceScreen from './src/screens/AttendanceScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import VideoCallScreen from './src/screens/VideoCallScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -93,6 +94,15 @@ const MeetingsStack = () => (
       name="MeetingDetail"
       component={MeetingDetailScreen}
       options={{ title: 'Meeting Details' }}
+    />
+    <Stack.Screen
+      name="VideoCall"
+      component={VideoCallScreen}
+      options={{
+        title: 'Video Call',
+        headerShown: false,
+        animationEnabled: true,
+      }}
     />
   </Stack.Navigator>
 );
