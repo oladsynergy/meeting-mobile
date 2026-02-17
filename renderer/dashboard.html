@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">IC</div>
+        <div>
+          <h3>Cooperative</h3>
+          <p>Meeting System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="members">
+          <span>Members</span>
+        </button>
+        <button class="nav-item" data-page="meetings">
+          <span>Meetings</span>
+        </button>
+        <button class="nav-item" data-page="attendance">
+          <span>Attendance</span>
+        </button>
+        <button class="nav-item" data-page="settings" id="settingsNavBtn">
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-outline btn-block">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="text-muted">Welcome back, <span id="userName">Member</span></p>
+        </div>
+        <div class="topbar-actions">
+          <button id="createMeetingBtn" class="btn btn-primary">Create Meeting</button>
+        </div>
+      </header>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Members</h3>
+          <p id="totalMembers" class="stat-number">0</p>
+          <span class="stat-caption">Registered accounts</span>
+        </div>
+        <div class="stat-card">
+          <h3>Desktop Users</h3>
+          <p id="desktopUsers" class="stat-number">0</p>
+          <span class="stat-caption">Last login desktop</span>
+        </div>
+        <div class="stat-card">
+          <h3>Mobile Users</h3>
+          <p id="mobileUsers" class="stat-number">0</p>
+          <span class="stat-caption">Last login mobile</span>
+        </div>
+        <div class="stat-card">
+          <h3>Total Meetings</h3>
+          <p id="totalMeetings" class="stat-number">0</p>
+          <span class="stat-caption">All meetings created</span>
+        </div>
+        <div class="stat-card">
+          <h3>Hosts</h3>
+          <p id="totalHosts" class="stat-number">0</p>
+          <span class="stat-caption">Active hosts</span>
+        </div>
+        <div class="stat-card">
+          <h3>Admins</h3>
+          <p id="totalAdmins" class="stat-number">0</p>
+          <span class="stat-caption">System administrators</span>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Meetings</h2>
+          </div>
+          <div class="card-body">
+            <div id="meetingList" class="list">
+              <div class="list-empty">No meetings yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Members</h2>
+          </div>
+          <div class="card-body">
+            <div id="memberList" class="list">
+              <div class="list-empty">No members yet.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

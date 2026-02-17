@@ -1,0 +1,64 @@
+{
+  "name": "islamic-cooperative-meeting-app",
+  "version": "2.2.0",
+  "description": "Islamic Cooperative Meeting & Attendance Desktop Application",
+  "main": "main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "meeting",
+    "attendance",
+    "cooperative"
+  ],
+  "author": "Islamic Cooperative",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "bcrypt": "^5.1.1",
+    "node-addon-api": "^7.1.0",
+    "node-fetch": "^2.6.11",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "json2csv": "^5.0.7",
+    "pdfkit": "^0.13.0"
+  },
+  "build": {
+    "appId": "com.islamiccooperative.meetingapp",
+    "productName": "Islamic Cooperative Meeting",
+    "asar": false,
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "main",
+      "renderer",
+      "assets",
+      "node_modules",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png",
+      "certificateFile": null,
+      "certificatePassword": null,
+      "signingHashAlgorithms": [
+        "sha256"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

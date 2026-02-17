@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card card">
+      <div class="auth-header">
+        <h1>Islamic Cooperative</h1>
+        <p>Meeting & Attendance System</p>
+      </div>
+
+      <div class="auth-body">
+        <div class="auth-tabs">
+          <button id="tab-login" class="auth-tab active" type="button">Sign In</button>
+          <button id="tab-register" class="auth-tab" type="button">Register</button>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <form id="loginForm" class="auth-form active">
+          <h2>Welcome Back</h2>
+          <p class="text-muted mb-3">Sign in to your account</p>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="Enter your email"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            Sign In
+          </button>
+        </form>
+
+        <form id="registerForm" class="auth-form">
+          <h2>Create Account</h2>
+          <p class="text-muted mb-3">Register a new member account</p>
+
+          <div class="form-group">
+            <label class="form-label" for="full_name">Full Name</label>
+            <input
+              type="text"
+              id="full_name"
+              class="form-control"
+              placeholder="Enter full name"
+              required
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="register_email">Email Address</label>
+            <input
+              type="email"
+              id="register_email"
+              class="form-control"
+              placeholder="Enter email address"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="register_password">Password</label>
+            <input
+              type="password"
+              id="register_password"
+              class="form-control"
+              placeholder="Create a password"
+              required
+              autocomplete="new-password"
+            >
+          </div>
+
+          <button type="submit" class="btn btn-secondary btn-block btn-lg">
+            Create Account
+          </button>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        <p class="text-muted text-center">
+          Default Admin: admin@cooperative.local / admin123
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

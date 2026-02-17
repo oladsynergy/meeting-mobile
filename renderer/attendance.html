@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Reports - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/attendance.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">IC</div>
+        <div>
+          <h3>Cooperative</h3>
+          <p>Meeting System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-page="dashboard">
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="members">
+          <span>Members</span>
+        </button>
+        <button class="nav-item" data-page="meetings">
+          <span>Meetings</span>
+        </button>
+        <button class="nav-item active" data-page="attendance">
+          <span>Attendance</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-outline btn-block">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Attendance Reports</h1>
+          <p class="text-muted">Track participation and export reports</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="exportCsv" class="btn btn-outline">Export CSV</button>
+          <button id="exportPdf" class="btn btn-primary">Export PDF</button>
+        </div>
+      </header>
+
+      <div id="notice" class="alert alert-warning hidden"></div>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Filters</h2>
+        </div>
+        <div class="card-body filters-grid">
+          <div class="form-group">
+            <label class="form-label" for="startDate">Start Date</label>
+            <input type="date" id="startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="endDate">End Date</label>
+            <input type="date" id="endDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="memberSelect">Member</label>
+            <select id="memberSelect" class="form-control">
+              <option value="">All Members</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button id="applyFilters" class="btn btn-secondary">Apply Filters</button>
+            <button id="clearFilters" class="btn btn-outline">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Meetings</h3>
+          <p id="totalMeetings" class="stat-number">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Attendance</h3>
+          <p id="totalAttendance" class="stat-number">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Average Attendance</h3>
+          <p id="averageAttendance" class="stat-number">0%</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Attendance Records</h2>
+        </div>
+        <div class="card-body">
+          <div id="attendanceTable" class="table"></div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Absent Members</h2>
+          </div>
+          <div class="card-body">
+            <div id="absentList" class="list"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Member Attendance %</h2>
+          </div>
+          <div class="card-body">
+            <div id="memberStatsTable" class="table"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/attendance.js"></script>
+</body>
+</html>

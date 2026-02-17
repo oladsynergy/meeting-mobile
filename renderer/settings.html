@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">IC</div>
+        <div>
+          <h3>Cooperative</h3>
+          <p>Meeting System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-page="dashboard">
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="members">
+          <span>Members</span>
+        </button>
+        <button class="nav-item" data-page="meetings">
+          <span>Meetings</span>
+        </button>
+        <button class="nav-item" data-page="attendance">
+          <span>Attendance</span>
+        </button>
+        <button class="nav-item active" data-page="settings">
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-outline btn-block">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <div>
+          <h2>Application Settings</h2>
+          <p class="text-secondary">Configure application settings (Admin only)</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge badge-primary" id="currentRole">ADMIN</span>
+        </div>
+      </div>
+
+      <div class="content-stack">
+        <section class="card">
+          <div class="card-header">
+            <h3>Signaling Server Configuration</h3>
+            <p class="text-secondary">Control how meetings connect across LAN or internet.</p>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>What is this?</strong>
+              <p>The signaling server coordinates WebRTC connections between meeting participants.</p>
+              <ul class="info-list">
+                <li><strong>Local Server:</strong> <code>http://127.0.0.1:3001</code> - For LAN-only meetings</li>
+                <li><strong>Remote Server (Railway):</strong> <code>https://meeting-signaling-server-production.up.railway.app</code></li>
+              </ul>
+            </div>
+
+            <form id="serverSettingsForm">
+              <div class="form-group">
+                <label for="signalingServerUrl" class="form-label">
+                  Signaling Server URL <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="url"
+                  class="form-control"
+                  id="signalingServerUrl"
+                  placeholder="http://127.0.0.1:3001"
+                  required
+                  pattern="https?://.+"
+                  title="Must be a valid HTTP or HTTPS URL"
+                >
+                <div class="form-help">
+                  Enter the full URL including protocol (http:// or https://)
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveSettingsBtn">
+                  Save Settings
+                </button>
+                <button type="button" class="btn btn-secondary" id="resetDefaultBtn">
+                  Reset to Local
+                </button>
+                <button type="button" class="btn btn-outline" id="testConnectionBtn">
+                  Test Connection
+                </button>
+              </div>
+
+              <div id="settingsStatus" class="status-slot"></div>
+            </form>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h3>Backend API Configuration</h3>
+            <p class="text-secondary">Enable shared users, meetings, and attendance across devices.</p>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>What is this?</strong>
+              <p>The backend API stores registrations, meetings, and attendance in a central database.</p>
+              <ul class="info-list">
+                <li><strong>Backend (Railway):</strong> <code>https://meeting-backend-production-ba47.up.railway.app</code></li>
+              </ul>
+            </div>
+
+            <form id="backendSettingsForm">
+              <div class="form-group">
+                <label for="backendApiUrl" class="form-label">
+                  Backend API URL <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="url"
+                  class="form-control"
+                  id="backendApiUrl"
+                  placeholder="https://meeting-backend-production.up.railway.app"
+                  required
+                  pattern="https?://.+"
+                  title="Must be a valid HTTP or HTTPS URL"
+                >
+                <div class="form-help">
+                  Enter the full URL including protocol (http:// or https://)
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveBackendBtn">
+                  Save Backend URL
+                </button>
+                <button type="button" class="btn btn-secondary" id="resetBackendBtn">
+                  Clear
+                </button>
+                <button type="button" class="btn btn-outline" id="testBackendBtn">
+                  Test API
+                </button>
+              </div>
+
+              <div id="backendStatus" class="status-slot"></div>
+            </form>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h3>Deployment Instructions</h3>
+          </div>
+          <div class="card-body">
+            <h4>To deploy your own signaling server:</h4>
+            <ol class="step-list">
+              <li>Navigate to the <code>signaling-server</code> folder in your app directory</li>
+              <li>Follow the instructions in <code>README.md</code></li>
+              <li>For Oracle Cloud Free Tier, follow the step-by-step guide</li>
+              <li>Once deployed, enter your server URL above</li>
+            </ol>
+
+            <div class="alert alert-warning">
+              <strong>Important:</strong>
+              <ul class="info-list">
+                <li>All users must connect to the same signaling server</li>
+                <li>Changes take effect for new meetings only</li>
+                <li>Users must restart the app after server URL changes</li>
+              </ul>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" id="openDocsBtn">
+                Open Deployment Guide
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/settings.js"></script>
+</body>
+</html>

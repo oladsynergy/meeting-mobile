@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Members - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/members.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">IC</div>
+        <div>
+          <h3>Cooperative</h3>
+          <p>Meeting System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-page="dashboard">
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item active" data-page="members">
+          <span>Members</span>
+        </button>
+        <button class="nav-item" data-page="meetings">
+          <span>Meetings</span>
+        </button>
+        <button class="nav-item" data-page="attendance">
+          <span>Attendance</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-outline btn-block">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Member Management</h1>
+          <p class="text-muted">Manage cooperative accounts and roles</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge badge-primary" id="currentRole">Role</span>
+        </div>
+      </header>
+
+      <div id="accessNotice" class="alert alert-warning hidden"></div>
+
+      <section class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 id="formTitle">Add New Member</h2>
+          </div>
+          <div class="card-body">
+            <form id="memberForm">
+              <div class="form-group">
+                <label class="form-label" for="full_name">Full Name</label>
+                <input type="text" id="full_name" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" required>
+              </div>
+
+              <div class="form-group" id="passwordGroup">
+                <label class="form-label" for="password">Temporary Password</label>
+                <input type="password" id="password" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="role">Role</label>
+                <select id="role" class="form-control" required>
+                  <option value="member">Member</option>
+                  <option value="host">Host</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Create Member</button>
+                <button type="button" class="btn btn-outline hidden" id="cancelEditBtn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Member Directory</h2>
+            <div class="form-group">
+              <input type="text" id="searchInput" class="form-control" placeholder="Search by name or email">
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="memberList" class="member-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/members.js"></script>
+</body>
+</html>

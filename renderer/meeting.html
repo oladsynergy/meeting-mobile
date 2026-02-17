@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Room - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/meeting.css">
+</head>
+<body>
+  <div class="meeting-shell">
+    <header class="meeting-header">
+      <div>
+        <h1 id="meetingTitle">Meeting Room</h1>
+        <p class="text-muted" id="meetingCode"></p>
+        <p class="meeting-timer" id="meetingTimer">00:00:00</p>
+      </div>
+      <div class="meeting-actions">
+        <span id="connectionStatus" class="badge badge-warning">Connecting</span>
+        <button id="leaveBtn" class="btn btn-danger">Leave Meeting</button>
+      </div>
+    </header>
+
+    <section class="meeting-content">
+      <div class="meeting-layout">
+        <div class="video-section">
+          <!-- Meeting Controls Toolbar -->
+          <div class="meeting-toolbar">
+            <button id="raiseHandBtn" class="btn btn-sm btn-outline" title="Raise Hand">✋ Raise Hand</button>
+            <button id="shareBtn" class="btn btn-sm btn-outline" title="Share Screen">🖥️ Share Screen</button>
+            <label class="audio-toggle" id="systemAudioLabel">
+              <input type="checkbox" id="systemAudioToggle">
+              <span>System Audio</span>
+            </label>
+            <button id="recordBtn" class="btn btn-sm btn-outline" title="Start Recording">⏺️ Record</button>
+            <button id="pauseRecordBtn" class="btn btn-sm btn-warning" style="display: none;" title="Pause Recording">⏸️ Pause</button>
+            <button id="stopRecordBtn" class="btn btn-sm btn-danger" style="display: none;" title="Stop Recording">⏹️ Stop</button>
+          </div>
+
+          <div class="video-grid">
+            <div class="video-card">
+              <video id="localVideo" autoplay muted playsinline></video>
+              <div class="video-label" id="localLabel">You</div>
+              <div class="video-overlay" id="localVideoOverlay"></div>
+              <div class="video-controls-overlay">
+                <button id="muteBtn" class="control-btn" title="Mute/Unmute">
+                  <span class="control-icon">🎤</span>
+                </button>
+                <button id="cameraBtn" class="control-btn" title="Camera On/Off">
+                  <span class="control-icon">📹</span>
+                </button>
+              </div>
+            </div>
+            <div id="remoteVideos" class="remote-grid"></div>
+          </div>
+
+          <div id="hostPanel" class="host-controls-compact hidden">
+            <h3>Host Controls</h3>
+            <div class="control-row">
+              <button id="lockToggle" class="btn btn-sm btn-outline">Lock Meeting</button>
+              <button id="muteAllBtn" class="btn btn-sm btn-outline">Mute All</button>
+              <button id="videoOffAllBtn" class="btn btn-sm btn-outline">Video Off All</button>
+              <button id="chatToggle" class="btn btn-sm btn-outline">Disable Chat</button>
+              <button id="clearChatBtn" class="btn btn-sm btn-outline">Clear Chat</button>
+              <button id="screenToggle" class="btn btn-sm btn-outline">Disable Screen Share</button>
+              <button id="clearHandsBtn" class="btn btn-sm btn-outline">Lower All Hands</button>
+              <button id="endMeetingBtn" class="btn btn-sm btn-danger">End Meeting for All</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="meeting-panel">
+          <div class="card">
+            <div class="card-header">
+              <h2>Participants</h2>
+            </div>
+            <div class="card-body">
+              <div id="participantsList" class="participants-list"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>Chat</h2>
+            </div>
+            <div class="card-body chat-panel">
+              <div id="chatList" class="chat-list"></div>
+              <form id="chatForm" class="chat-form">
+                <input id="chatInput" class="form-control" placeholder="Type a message" autocomplete="off">
+                <button id="chatSendBtn" class="btn btn-primary" type="submit">Send</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>Voting</h2>
+            </div>
+            <div class="card-body voting-panel">
+              <div id="hostPollForm" class="hidden">
+                <div class="form-group">
+                  <label class="form-label" for="pollQuestion">Question</label>
+                  <input id="pollQuestion" class="form-control" placeholder="Enter poll question">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pollOptions">Options (one per line)</label>
+                  <textarea id="pollOptions" class="form-control" rows="4" placeholder="Option 1&#10;Option 2"></textarea>
+                </div>
+                <button id="createPollBtn" class="btn btn-secondary" type="button">Create Poll</button>
+              </div>
+              <div id="pollList" class="poll-list"></div>
+            </div>
+          </div>
+
+          <div id="handQueueCard" class="card hidden">
+            <div class="card-header">
+              <h2>Raised Hands</h2>
+            </div>
+            <div class="card-body">
+              <div id="handQueueList" class="hand-queue"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>Meeting Status</h2>
+            </div>
+            <div class="card-body">
+              <div id="meetingStatus" class="status-list"></div>
+              <div id="recordStatus" class="record-status hidden">Recording...</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/socket.io.min.js"></script>
+  <script src="js/meeting.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meetings - Islamic Cooperative Meeting</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/meetings.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">IC</div>
+        <div>
+          <h3>Cooperative</h3>
+          <p>Meeting System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-page="dashboard">
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="members">
+          <span>Members</span>
+        </button>
+        <button class="nav-item active" data-page="meetings">
+          <span>Meetings</span>
+        </button>
+        <button class="nav-item" data-page="attendance">
+          <span>Attendance</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-outline btn-block">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Meetings</h1>
+          <p class="text-muted">Create or join a cooperative meeting</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge badge-primary" id="currentRole">Role</span>
+        </div>
+      </header>
+
+      <div id="notice" class="alert alert-warning hidden"></div>
+
+      <section class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Create Meeting</h2>
+          </div>
+          <div class="card-body">
+            <form id="createMeetingForm">
+              <div class="form-group">
+                <label class="form-label" for="title">Meeting Title</label>
+                <input type="text" id="title" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="scheduled_time">Date & Time</label>
+                <input type="datetime-local" id="scheduled_time" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="meeting_password">Optional Password</label>
+                <input type="password" id="meeting_password" class="form-control" placeholder="Leave blank for open meeting">
+              </div>
+
+              <div id="hostPermissionsSection" class="form-group hidden">
+                <label class="form-label">Host Permissions</label>
+                <div class="permissions-grid">
+                  <label class="permission-item">
+                    <input type="checkbox" id="permLock" checked>
+                    Meeting Lock
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permMute" checked>
+                    Mute/Unmute
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permVideo" checked>
+                    Video Control
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permChat" checked>
+                    Chat Control
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permScreen" checked>
+                    Screen Share Control
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permRemove" checked>
+                    Remove Participants
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="permEndMeeting" checked>
+                    End Meeting for All
+                  </label>
+                </div>
+
+                <label class="form-label" style="margin-top: 1rem;">Participant Features</label>
+                <div class="permissions-grid">
+                  <label class="permission-item">
+                    <input type="checkbox" id="allowRaiseHand" checked>
+                    Raise Hand
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="allowScreenShare" checked>
+                    Screen Share
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="allowRecording" checked>
+                    Recording
+                  </label>
+                  <label class="permission-item">
+                    <input type="checkbox" id="allowSystemAudio" checked>
+                    System Audio
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="createBtn">Create Meeting</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Join Meeting</h2>
+          </div>
+          <div class="card-body">
+            <form id="joinMeetingForm">
+              <div class="form-group">
+                <label class="form-label" for="meeting_code">Meeting Code</label>
+                <input type="text" id="meeting_code" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="join_password">Meeting Password</label>
+                <input type="password" id="join_password" class="form-control" placeholder="Enter password if required">
+              </div>
+
+              <button type="submit" class="btn btn-secondary" id="joinBtn">Join Meeting</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Upcoming Meetings</h2>
+        </div>
+        <div class="card-body">
+          <div id="meetingList" class="meeting-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="permissionsModal" class="modal hidden">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h2>Edit Host Permissions</h2>
+        <button id="closePermissionsBtn" class="btn btn-outline btn-sm">Close</button>
+      </div>
+      <div class="card-body">
+        <div class="permissions-grid">
+          <label class="permission-item">
+            <input type="checkbox" id="editPermLock">
+            Meeting Lock
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermMute">
+            Mute/Unmute
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermVideo">
+            Video Control
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermChat">
+            Chat Control
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermScreen">
+            Screen Share Control
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermRemove">
+            Remove Participants
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editPermEndMeeting">
+            End Meeting for All
+          </label>
+        </div>
+        
+        <label class="form-label" style="margin-top: 1rem;">Participant Features</label>
+        <div class="permissions-grid">
+          <label class="permission-item">
+            <input type="checkbox" id="editAllowRaiseHand">
+            Raise Hand
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editAllowScreenShare">
+            Screen Share
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editAllowRecording">
+            Recording
+          </label>
+          <label class="permission-item">
+            <input type="checkbox" id="editAllowSystemAudio">
+            System Audio
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="savePermissionsBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/meetings.js"></script>
+</body>
+</html>
