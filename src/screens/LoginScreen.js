@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const response = await authAPI.login(email, password);
+      const response = await authAPI.login(email, password, 'mobile');
       const { token, user } = response.data;
 
       await setToken(token);

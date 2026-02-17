@@ -152,6 +152,23 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      {(userData?.role === 'admin' || userData?.role === 'host') && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Admin Panel</Text>
+          <View style={styles.adminInfo}>
+            <Text style={styles.adminBadge}>
+              👤 {userData?.role?.toUpperCase()}
+            </Text>
+          </View>
+          <TouchableOpacity 
+            style={styles.adminButton} 
+            onPress={() => navigation.navigate('AdminSettings', { isGlobal: true })}
+          >
+            <Text style={styles.adminButtonText}>Global Admin Settings</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -259,6 +276,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  adminInfo: {
+    marginBottom: 12,
+  },
+  adminBadge: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    backgroundColor: '#e3f2fd',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+  },
+  adminButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  adminButtonText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',

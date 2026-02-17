@@ -15,6 +15,7 @@ import MembersScreen from './src/screens/MembersScreen';
 import AttendanceScreen from './src/screens/AttendanceScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
+import AdminSettingsScreen from './src/screens/AdminSettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,10 +75,11 @@ const AppStack = () => (
     />
     <Tab.Screen
       name="Settings"
-      component={SettingsScreen}
+      component={SettingsStack}
       options={{
         title: 'Settings',
         tabBarLabel: 'Settings',
+        headerShown: false,
       }}
     />
   </Tab.Navigator>
@@ -103,6 +105,26 @@ const MeetingsStack = () => (
         headerShown: false,
         animationEnabled: true,
       }}
+    />
+    <Stack.Screen
+      name="AdminSettings"
+      component={AdminSettingsScreen}
+      options={{ title: 'Admin Settings' }}
+    />
+  </Stack.Navigator>
+);
+
+const SettingsStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="SettingsMain"
+      component={SettingsScreen}
+      options={{ title: 'Settings' }}
+    />
+    <Stack.Screen
+      name="AdminSettings"
+      component={AdminSettingsScreen}
+      options={{ title: 'Admin Settings' }}
     />
   </Stack.Navigator>
 );
