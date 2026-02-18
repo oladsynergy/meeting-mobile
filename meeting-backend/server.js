@@ -21,6 +21,7 @@ async function initDb() {
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       role TEXT NOT NULL CHECK(role IN ('admin', 'host', 'member')),
+      last_platform TEXT,
       created_at TIMESTAMP DEFAULT NOW()
     )
   `);
