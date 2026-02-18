@@ -146,6 +146,7 @@ const RootNavigator = ({ userToken, isLoading }) => (
 export default function App() {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
+      console.log('[APP] Reducer action:', action.type, 'Token:', action.payload ? action.payload.substring(0, 20) + '...' : 'null');
       switch (action.type) {
         case 'RESTORE_TOKEN':
           return {
@@ -174,24 +175,33 @@ export default function App() {
     }
   );
 
+  const tokenRef = React.useRef(state.userToken);
+
+  useEffect(() => {
+    tokenRef.current = state.userToken;
+  }, [state.userToken]);
+
   useEffect(() => {
     const bootstrapAsync = async () => {
       try {
+        console.log('[APP] Checking for existing token...');
         const token = await AsyncStorage.getItem('userToken');
+        console.log('[APP] Found token:', token ? token.substring(0, 20) + '...' : 'null');
         dispatch({ type: 'RESTORE_TOKEN', payload: token });
       } catch (e) {
-        console.error(e);
+        console.error('[APP] Error restoring token:', e);
         dispatch({ type: 'RESTORE_TOKEN', payload: null });
       }
     };
 
     bootstrapAsync();
 
-    // Poll for token changes (check every 1 second)
+    // Poll for token changes (check every 2 seconds)
     const interval = setInterval(async () => {
       try {
         const currentToken = await AsyncStorage.getItem('userToken');
-        if (currentToken !== state.userToken) {
+        if (currentToken !== tokenRef.current) {
+          console.log('[APP] Token changed!', 'Old:', tokenRef.current ? tokenRef.current.substring(0, 20) + '...' : 'null', 'New:', currentToken ? currentToken.substring(0, 20) + '...' : 'null');
           if (currentToken) {
             dispatch({ type: 'SIGN_IN', payload: currentToken });
           } else {
@@ -199,12 +209,12 @@ export default function App() {
           }
         }
       } catch (e) {
-        console.error('Token check error:', e);
+        console.error('[APP] Token check error:', e);
       }
-    }, 1000);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [state.userToken]);
+  }, []);
 
   return <RootNavigator userToken={state.userToken} isLoading={state.isLoading} />;
 }
