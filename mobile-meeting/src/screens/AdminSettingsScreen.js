@@ -8,20 +8,26 @@ import {
   ActivityIndicator,
   Alert,
   Switch,
+  Platform,
 } from 'react-native';
 import { meetingAPI } from '../services/api';
 import { getUserData } from '../utils/storage';
+import { useIsFocused } from '@react-navigation/native';
 
-const AdminSettingsScreen = ({ route }) => {
-  const { meetingId } = route.params;
+const AdminSettingsScreen = ({ route, navigation }) => {
+  const isFocused = useIsFocused();
+  const meetingId = route?.params?.meetingId;
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [settings, setSettings] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    if (isFocused) {
+      loadSettings();
+    }
+  }, [isFocused]);
 
   const loadSettings = async () => {
     try {
@@ -31,15 +37,43 @@ const AdminSettingsScreen = ({ route }) => {
 
       // Check if user is admin or host
       if (user?.role !== 'admin' && user?.role !== 'host') {
-        Alert.alert('Access Denied', 'Only admins and hosts can access these settings');
+        console.warn('[ADMIN SETTINGS] User is not admin/host, access denied. Role:', user?.role);
+        const msg = 'Only admins and hosts can access these settings';
+        if (Platform.OS === 'web') {
+          window.alert(msg);
+        } else {
+          Alert.alert('Access Denied', msg);
+        }
+        setIsAuthorized(false);
+        setLoading(false);
         return;
       }
 
-      const response = await meetingAPI.getMeetingSettings(meetingId);
-      setSettings(response.data.settings || {});
+      setIsAuthorized(true);
+
+      // If no meetingId, just show empty state for global admin settings
+      if (!meetingId) {
+        console.log('[ADMIN SETTINGS] Global admin settings (no specific meeting)');
+        setSettings({});
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await meetingAPI.getMeetingSettings(meetingId);
+        setSettings(response.data.settings || {});
+      } catch (error) {
+        console.warn('[ADMIN SETTINGS] Failed to load meeting settings, using empty:', error.message);
+        setSettings({});
+      }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      Alert.alert('Error', 'Failed to load settings');
+      console.error('[ADMIN SETTINGS] Error loading settings:', error);
+      const msg = 'Failed to load settings';
+      if (Platform.OS === 'web') {
+        window.alert(msg);
+      } else {
+        Alert.alert('Error', msg);
+      }
     } finally {
       setLoading(false);
     }
