@@ -26,6 +26,15 @@ async function initDb() {
     )
   `);
 
+  // Ensure last_platform column exists (for backward compatibility with existing databases)
+  try {
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS last_platform TEXT
+    `);
+  } catch (e) {
+    // Column might already exist, ignore error
+  }
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS meetings (
       id SERIAL PRIMARY KEY,
