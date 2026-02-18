@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Meeting App",
+    "slug": "meeting-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.amrimeetingapp.mobile"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "460a583c-7e3b-4e12-aef7-b316cb9d140c"
+      }
+    }
+  }
+}

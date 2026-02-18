@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Create React Native Mobile App",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"create-expo-app",
+				".",
+				"--template"
+			],
+			"group": "build"
+		}
+	]
+}

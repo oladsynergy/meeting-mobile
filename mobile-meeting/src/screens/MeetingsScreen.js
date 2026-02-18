@@ -112,7 +112,11 @@ const MeetingsScreen = ({ navigation }) => {
     console.log('[CREATE MEETING] Button clicked, title:', newMeeting.title);
     
     if (!newMeeting.title) {
-      Alert.alert('Error', 'Please enter a meeting title');
+      if (Platform.OS === 'web') {
+        window.alert('Please enter a meeting title');
+      } else {
+        Alert.alert('Error', 'Please enter a meeting title');
+      }
       return;
     }
 
@@ -138,51 +142,52 @@ const MeetingsScreen = ({ navigation }) => {
       const response = await meetingAPI.createMeeting(meetingData);
       console.log('[CREATE MEETING] API success:', response.data);
       
-      Alert.alert(
-        'Success', 
-        `Meeting created!\nCode: ${response.data.meeting.meeting_code}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              setCreateModalVisible(false);
-              setNewMeeting({ title: '', scheduledTime: '', password: '' });
-              loadMeetings();
-            }
-          }
-        ]
-      );
+      const successMsg = `Meeting created!\nCode: ${response.data.meeting.meeting_code}`;
+      
+      if (Platform.OS === 'web') {
+        window.alert(successMsg);
+      } else {
+        Alert.alert('Success', successMsg);
+      }
+      
+      setCreateModalVisible(false);
+      setNewMeeting({ title: '', scheduledTime: '', password: '' });
+      loadMeetings();
     } catch (error) {
       console.warn('[CREATE MEETING] API failed, using mock:', error.message);
       
-      // Mock success for testing - generate mock meeting code
+      // Generate mock meeting
       const mockCode = 'MOCK' + Math.floor(Math.random() * 10000);
+      const mockMeeting = {
+        id: Date.now(),
+        title: newMeeting.title,
+        meeting_code: mockCode,
+        start_time: scheduledTime,
+        status: 'active',
+        expected_attendees: 0
+      };
+      
+      console.log('[CREATE MEETING] Adding mock meeting to list:', mockMeeting);
+      
+      // Add to list first
+      setMeetings(prev => [mockMeeting, ...prev]);
+      
+      // Close modal
+      setCreateModalVisible(false);
+      setNewMeeting({ title: '', scheduledTime: '', password: '' });
+      
+      // Show success message
       const timeStr = newMeeting.scheduledTime 
         ? `\nScheduled: ${new Date(newMeeting.scheduledTime).toLocaleString()}`
         : '\nStarting: Now';
+      const successMsg = `Meeting Created!\n\nTitle: "${newMeeting.title}"\nCode: ${mockCode}${timeStr}`;
       
-      Alert.alert(
-        'Meeting Created (Mock)', 
-        `Title: "${newMeeting.title}"\nCode: ${mockCode}${timeStr}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              setCreateModalVisible(false);
-              setNewMeeting({ title: '', scheduledTime: '', password: '' });
-              // Add mock meeting to list
-              setMeetings(prev => [{
-                id: Date.now(),
-                title: newMeeting.title,
-                meeting_code: mockCode,
-                start_time: scheduledTime,
-                status: 'active',
-                expected_attendees: 0
-              }, ...prev]);
-            }
-          }
-        ]
-      );
+      console.log('[CREATE MEETING] Showing success alert');
+      if (Platform.OS === 'web') {
+        window.alert(successMsg);
+      } else {
+        Alert.alert('Success', successMsg);
+      }
     }
   };
 
