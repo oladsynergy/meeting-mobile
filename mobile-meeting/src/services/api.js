@@ -34,10 +34,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Don't auto-logout on 401 - let the user stay logged in with mock auth
+    // Only log the error for debugging
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      await AsyncStorage.removeItem('userToken');
-      // Optionally navigate to login
+      console.warn('[API] 401 Unauthorized - using mock data fallback');
     }
     return Promise.reject(error);
   }
