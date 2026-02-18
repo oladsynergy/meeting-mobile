@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { healthCheck } from '../services/api';
@@ -33,7 +34,9 @@ const SettingsScreen = ({ navigation }) => {
 
   const loadSettings = async () => {
     try {
+      console.log('[SETTINGS] Loading settings...');
       const user = await getUserData();
+      console.log('[SETTINGS] User data loaded:', user?.email);
       setUserData(user);
 
       const backend = await getBackendUrl();
@@ -41,54 +44,105 @@ const SettingsScreen = ({ navigation }) => {
 
       const signaling = await getSignalingUrl();
       setSignalingUrlState(signaling);
+      
+      console.log('[SETTINGS] Settings loaded successfully');
     } catch (error) {
-      console.error('Error loading settings:', error);
+      console.error('[SETTINGS] Error loading settings:', error);
+      // Don't show alert - just log the error
     }
   };
 
   const handleSaveSettings = async () => {
+    console.log('[SETTINGS] Save settings clicked');
     try {
       await setBackendUrl(backendUrl);
       await setSignalingUrl(signalingUrl);
-      Alert.alert('Success', 'Settings saved successfully');
+      const msg = 'Settings saved successfully';
+      if (Platform.OS === 'web') {
+        window.alert(msg);
+      } else {
+        Alert.alert('Success', msg);
+      }
     } catch (error) {
-      Alert.alert('Error', 'Failed to save settings');
+      console.error('[SETTINGS] Save settings error:', error);
+      const msg = 'Failed to save settings';
+      if (Platform.OS === 'web') {
+        window.alert(msg);
+      } else {
+        Alert.alert('Error', msg);
+      }
     }
   };
 
   const handleTestConnection = async () => {
+    console.log('[SETTINGS] Test connection clicked');
     setTesting(true);
     try {
       const response = await healthCheck();
       if (response.status === 200) {
-        Alert.alert('Success', 'Backend API connection successful!');
+        const msg = 'Backend API connection successful!';
+        if (Platform.OS === 'web') {
+          window.alert(msg);
+        } else {
+          Alert.alert('Success', msg);
+        }
       }
     } catch (error) {
-      Alert.alert(
-        'Connection Failed',
-        'Unable to connect to backend API. Please check the URL.'
-      );
+      console.warn('[SETTINGS] Connection failed:', error.message);
+      const msg = 'Unable to connect to backend API. Please check the URL.';
+      if (Platform.OS === 'web') {
+        window.alert(msg);
+      } else {
+        Alert.alert('Connection Failed', msg);
+      }
     } finally {
       setTesting(false);
     }
   };
 
   const handleLogout = async () => {
-    Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
-      { text: 'Cancel', onPress: () => {} },
-      {
-        text: 'Logout',
-        onPress: async () => {
-          try {
-            await clearToken();
-            await clearUserData();
-            // Navigation handled by App.js based on token state
-          } catch (error) {
-            Alert.alert('Error', 'Failed to logout');
+    console.log('[SETTINGS] Logout button clicked');
+    
+    const confirmLogout = () => {
+      console.log('[SETTINGS] Logout confirmed, clearing data...');
+      
+      clearToken()
+        .then(() => clearUserData())
+        .then(() => {
+          console.log('[SETTINGS] Token and user data cleared');
+          // Navigation handled by App.js based on token polling
+          if (Platform.OS === 'web') {
+            window.alert('Logged out successfully');
+          } else {
+            Alert.alert('Success', 'Logged out successfully');
           }
+        })
+        .catch((error) => {
+          console.error('[SETTINGS] Logout error:', error);
+          const msg = 'Failed to logout';
+          if (Platform.OS === 'web') {
+            window.alert(msg);
+          } else {
+            Alert.alert('Error', msg);
+          }
+        });
+    };
+
+    if (Platform.OS === 'web') {
+      // Use native browser confirm on web
+      if (window.confirm('Are you sure you want to log out?')) {
+        confirmLogout();
+      }
+    } else {
+      // Use React Native Alert on mobile
+      Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
+        { text: 'Cancel', onPress: () => {} },
+        {
+          text: 'Logout',
+          onPress: confirmLogout,
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   return (
