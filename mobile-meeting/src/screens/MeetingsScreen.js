@@ -116,22 +116,27 @@ const MeetingsScreen = ({ navigation }) => {
       return;
     }
 
-    try {
-      console.log('[CREATE MEETING] Attempting to create meeting...');
-      // Convert datetime-local format to ISO string if provided
-      let scheduledTime = new Date().toISOString();
-      if (newMeeting.scheduledTime) {
+    // Convert datetime-local format to ISO string if provided
+    let scheduledTime = new Date().toISOString();
+    if (newMeeting.scheduledTime) {
+      try {
         scheduledTime = new Date(newMeeting.scheduledTime).toISOString();
+      } catch (e) {
+        console.warn('[CREATE MEETING] Invalid date format, using current time');
       }
+    }
 
-      const meetingData = {
-        title: newMeeting.title,
-        scheduled_time: scheduledTime,
-        password: newMeeting.password || '',
-      };
+    const meetingData = {
+      title: newMeeting.title,
+      scheduled_time: scheduledTime,
+      password: newMeeting.password || '',
+    };
 
-      console.log('[CREATE MEETING] Meeting data:', meetingData);
+    console.log('[CREATE MEETING] Meeting data:', meetingData);
+
+    try {
       const response = await meetingAPI.createMeeting(meetingData);
+      console.log('[CREATE MEETING] API success:', response.data);
       
       Alert.alert(
         'Success', 
@@ -148,22 +153,32 @@ const MeetingsScreen = ({ navigation }) => {
         ]
       );
     } catch (error) {
-      console.warn('Create meeting failed, using mock:', error);
-      // Mock success for testing
+      console.warn('[CREATE MEETING] API failed, using mock:', error.message);
+      
+      // Mock success for testing - generate mock meeting code
       const mockCode = 'MOCK' + Math.floor(Math.random() * 10000);
       const timeStr = newMeeting.scheduledTime 
         ? `\nScheduled: ${new Date(newMeeting.scheduledTime).toLocaleString()}`
         : '\nStarting: Now';
       
       Alert.alert(
-        'Success (Mock)', 
-        `Meeting "${newMeeting.title}" created!\nCode: ${mockCode}${timeStr}`,
+        'Meeting Created (Mock)', 
+        `Title: "${newMeeting.title}"\nCode: ${mockCode}${timeStr}`,
         [
           {
             text: 'OK',
             onPress: () => {
               setCreateModalVisible(false);
               setNewMeeting({ title: '', scheduledTime: '', password: '' });
+              // Add mock meeting to list
+              setMeetings(prev => [{
+                id: Date.now(),
+                title: newMeeting.title,
+                meeting_code: mockCode,
+                start_time: scheduledTime,
+                status: 'active',
+                expected_attendees: 0
+              }, ...prev]);
             }
           }
         ]
