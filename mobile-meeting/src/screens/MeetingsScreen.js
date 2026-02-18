@@ -33,6 +33,16 @@ const MeetingsScreen = ({ navigation }) => {
     password: '',
   });
 
+  const getDefaultDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       loadUserData();
@@ -104,9 +114,15 @@ const MeetingsScreen = ({ navigation }) => {
     }
 
     try {
+      // Convert datetime-local format to ISO string if provided
+      let scheduledTime = new Date().toISOString();
+      if (newMeeting.scheduledTime) {
+        scheduledTime = new Date(newMeeting.scheduledTime).toISOString();
+      }
+
       const meetingData = {
         title: newMeeting.title,
-        scheduled_time: newMeeting.scheduledTime || new Date().toISOString(),
+        scheduled_time: scheduledTime,
         password: newMeeting.password || '',
       };
 
@@ -129,9 +145,14 @@ const MeetingsScreen = ({ navigation }) => {
     } catch (error) {
       console.warn('Create meeting failed, using mock:', error);
       // Mock success for testing
+      const mockCode = 'MOCK' + Math.floor(Math.random() * 10000);
+      const timeStr = newMeeting.scheduledTime 
+        ? `\nScheduled: ${new Date(newMeeting.scheduledTime).toLocaleString()}`
+        : '\nStarting: Now';
+      
       Alert.alert(
         'Success (Mock)', 
-        `Meeting "${newMeeting.title}" created!\nCode: MOCK${Math.floor(Math.random() * 10000)}`,
+        `Meeting "${newMeeting.title}" created!\nCode: ${mockCode}${timeStr}`,
         [
           {
             text: 'OK',
@@ -296,9 +317,11 @@ const MeetingsScreen = ({ navigation }) => {
               <Text style={styles.label}>Scheduled Time (optional)</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Leave empty for immediate meeting"
+                placeholder={getDefaultDateTime()}
                 value={newMeeting.scheduledTime}
                 onChangeText={(text) => setNewMeeting({...newMeeting, scheduledTime: text})}
+                // @ts-ignore - datetime-local works on web
+                type="datetime-local"
               />
 
               <Text style={styles.label}>Password (optional)</Text>
