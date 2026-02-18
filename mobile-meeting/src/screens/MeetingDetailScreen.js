@@ -342,19 +342,21 @@ const MeetingDetailScreen = ({ route, navigation }) => {
             </View>
           )}
 
-          <Text style={styles.sectionTitle}>Meeting Attendees</Text>
-          <View style={styles.attendeesList}>
-            {attendees.map((attendee) => (
-              <View key={attendee.id} style={styles.attendeeItem}>
-                <Text style={styles.attendeeName}>{attendee.full_name}</Text>
-                <Text style={styles.attendeeTime}>
-                  Joined: {new Date(attendee.join_time).toLocaleTimeString()}
-                </Text>
+          {(userData?.role === 'admin' || userData?.role === 'host') && (
+            <>
+              <Text style={styles.sectionTitle}>Meeting Attendees</Text>
+              <View style={styles.attendeesList}>
+                {attendees.map((attendee) => (
+                  <View key={attendee.id} style={styles.attendeeItem}>
+                    <Text style={styles.attendeeName}>{attendee.full_name}</Text>
+                    <Text style={styles.attendeeTime}>
+                      Joined: {new Date(attendee.join_time).toLocaleTimeString()}
+                    </Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-        </>
-      )}
+            </>
+          )}
 
       <View style={styles.buttonContainer}>
         {hasJoined ? (
