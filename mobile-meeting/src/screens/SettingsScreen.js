@@ -161,50 +161,52 @@ const SettingsScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Backend API Configuration</Text>
-        <Text style={styles.label}>Backend URL:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter backend API URL"
-          value={backendUrl}
-          onChangeText={setBackendUrlState}
-        />
+      {(userData?.role === 'admin' || userData?.role === 'host') && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Backend API Configuration</Text>
+          <Text style={styles.label}>Backend URL:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter backend API URL"
+            value={backendUrl}
+            onChangeText={setBackendUrlState}
+          />
 
-        <Text style={styles.label}>Signaling Server URL:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter signaling server URL"
-          value={signalingUrl}
-          onChangeText={setSignalingUrlState}
-        />
+          <Text style={styles.label}>Signaling Server URL:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter signaling server URL"
+            value={signalingUrl}
+            onChangeText={setSignalingUrlState}
+          />
 
-        <View style={styles.tips}>
-          <Text style={styles.tipsTitle}>Default URLs:</Text>
-          <Text style={styles.tipsText}>
-            Backend: https://meeting-backend-production-ba47.up.railway.app
-          </Text>
-          <Text style={styles.tipsText}>
-            Signaling: https://meeting-signaling-server-production.up.railway.app
-          </Text>
+          <View style={styles.tips}>
+            <Text style={styles.tipsTitle}>Default URLs:</Text>
+            <Text style={styles.tipsText}>
+              Backend: https://meeting-backend-production-ba47.up.railway.app
+            </Text>
+            <Text style={styles.tipsText}>
+              Signaling: https://meeting-signaling-server-production.up.railway.app
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.testButton}
+            onPress={handleTestConnection}
+            disabled={testing}
+          >
+            {testing ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.testButtonText}>Test Connection</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveSettings}>
+            <Text style={styles.saveButtonText}>Save Settings</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.testButton}
-          onPress={handleTestConnection}
-          disabled={testing}
-        >
-          {testing ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.testButtonText}>Test Connection</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveSettings}>
-          <Text style={styles.saveButtonText}>Save Settings</Text>
-        </TouchableOpacity>
-      </View>
+      )}
 
       {(userData?.role === 'admin' || userData?.role === 'host') && (
         <View style={styles.section}>
