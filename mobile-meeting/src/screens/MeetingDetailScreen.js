@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   Platform,
+  TextInput,
 } from 'react-native';
 import { meetingAPI, attendanceAPI } from '../services/api';
 import { getUserData } from '../utils/storage';
@@ -311,26 +312,13 @@ const MeetingDetailScreen = ({ route, navigation }) => {
                 )}
               </ScrollView>
               <View style={styles.inputContainer}>
-                <input
-                  type="text"
+                <TextInput
                   placeholder="Type a message..."
                   value={chatMessage}
-                  onChange={(e) => setChatMessage(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSendMessage();
-                    }
-                  }}
-                  style={{
-                    flex: 1,
-                    borderWidth: 1,
-                    borderColor: '#ddd',
-                    borderRadius: 8,
-                    paddingHorizontal: 10,
-                    paddingVertical: 8,
-                    marginRight: 8,
-                    fontSize: 14,
-                  }}
+                  onChangeText={setChatMessage}
+                  onSubmitEditing={handleSendMessage}
+                  style={styles.chatInput}
+                  placeholderTextColor="#999"
                 />
                 <TouchableOpacity
                   style={styles.sendButton}
@@ -548,6 +536,17 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  chatInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginRight: 8,
+    fontSize: 14,
+    color: '#333',
   },
   sendButton: {
     backgroundColor: '#007AFF',
