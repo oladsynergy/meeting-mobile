@@ -21,19 +21,9 @@ async function initDb() {
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       role TEXT NOT NULL CHECK(role IN ('admin', 'host', 'member')),
-      last_platform TEXT,
       created_at TIMESTAMP DEFAULT NOW()
     )
   `);
-
-  // Ensure last_platform column exists (for backward compatibility with existing databases)
-  try {
-    await pool.query(`
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS last_platform TEXT
-    `);
-  } catch (e) {
-    // Column might already exist, ignore error
-  }
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS meetings (
