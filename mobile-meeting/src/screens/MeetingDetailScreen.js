@@ -365,6 +365,8 @@ const MeetingDetailScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         )}
       </View>
+      </>
+      )}
     </ScrollView>
   );
 };
