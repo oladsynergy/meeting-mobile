@@ -177,7 +177,18 @@ app.post('/auth/login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email and password are required.' });
     }
 
-    const result = await pool.query('SELECT id, full_name, email, password_hash, role FROM users WHERE email = $1', [email]);
+    let result;
+    try {
+      result = await pool.query('SELECT id, full_name, email, password_hash, role FROM users WHERE email = $1', [email]);
+    } catch (dbError) {
+      // Handle case where last_platform column might exist but isn't selected
+      if (dbError.message && dbError.message.includes('last_platform')) {
+        result = await pool.query('SELECT id, full_name, email, password_hash, role FROM users WHERE email = $1', [email]);
+      } else {
+        throw dbError;
+      }
+    }
+    
     const user = result.rows[0];
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
