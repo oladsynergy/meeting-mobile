@@ -109,12 +109,15 @@ const MeetingsScreen = ({ navigation }) => {
   };
 
   const handleCreateMeeting = async () => {
+    console.log('[CREATE MEETING] Button clicked, title:', newMeeting.title);
+    
     if (!newMeeting.title) {
       Alert.alert('Error', 'Please enter a meeting title');
       return;
     }
 
     try {
+      console.log('[CREATE MEETING] Attempting to create meeting...');
       // Convert datetime-local format to ISO string if provided
       let scheduledTime = new Date().toISOString();
       if (newMeeting.scheduledTime) {
@@ -127,6 +130,7 @@ const MeetingsScreen = ({ navigation }) => {
         password: newMeeting.password || '',
       };
 
+      console.log('[CREATE MEETING] Meeting data:', meetingData);
       const response = await meetingAPI.createMeeting(meetingData);
       
       Alert.alert(
@@ -168,6 +172,9 @@ const MeetingsScreen = ({ navigation }) => {
   };
 
   const canCreateMeeting = userData?.role === 'admin' || userData?.role === 'host';
+
+  console.log('[MEETINGS] User data:', userData);
+  console.log('[MEETINGS] Can create meeting:', canCreateMeeting);
 
   const filteredMeetings = meetings.filter(
     (m) =>
@@ -230,8 +237,11 @@ const MeetingsScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         {canCreateMeeting && (
           <TouchableOpacity
-            style={[styles.actionButton, styles.createButton]}
-            onPress={() => setCreateModalVisible(true)}
+            style={[styles.actionButton, styles.createButton, { marginRight: 10 }]}
+            onPress={() => {
+              console.log('[MEETINGS] Create meeting button pressed');
+              setCreateModalVisible(true);
+            }}
           >
             <Text style={styles.actionButtonText}>+ Create Meeting</Text>
           </TouchableOpacity>
@@ -239,7 +249,10 @@ const MeetingsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={[styles.actionButton, styles.joinButton]}
-          onPress={() => setJoinModalVisible(true)}
+          onPress={() => {
+            console.log('[MEETINGS] Join meeting button pressed');
+            setJoinModalVisible(true);
+          }}
         >
           <Text style={styles.actionButtonText}>Join by Code</Text>
         </TouchableOpacity>
@@ -277,7 +290,7 @@ const MeetingsScreen = ({ navigation }) => {
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
+                style={[styles.button, styles.cancelButton, { marginRight: 10 }]}
                 onPress={() => {
                   setJoinModalVisible(false);
                   setMeetingCode('');
@@ -352,7 +365,7 @@ const MeetingsScreen = ({ navigation }) => {
 
               <View style={styles.modalButtons}>
                 <TouchableOpacity
-                  style={[styles.button, styles.cancelButton]}
+                  style={[styles.button, styles.cancelButton, { marginRight: 10 }]}
                   onPress={() => {
                     setCreateModalVisible(false);
                     setNewMeeting({ title: '', scheduledTime: '', password: '' });
@@ -397,7 +410,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 20,
     marginVertical: 10,
-    gap: 10,
   },
   actionButton: {
     flex: 1,
@@ -504,7 +516,6 @@ const styles = StyleSheet.create({
   },
   modalButtons: {
     flexDirection: 'row',
-    gap: 10,
   },
   button: {
     flex: 1,
