@@ -11,6 +11,7 @@ import {
   Modal,
   RefreshControl,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { meetingAPI } from '../services/api';
@@ -315,14 +316,30 @@ const MeetingsScreen = ({ navigation }) => {
               />
 
               <Text style={styles.label}>Scheduled Time (optional)</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={getDefaultDateTime()}
-                value={newMeeting.scheduledTime}
-                onChangeText={(text) => setNewMeeting({...newMeeting, scheduledTime: text})}
-                // @ts-ignore - datetime-local works on web
-                type="datetime-local"
-              />
+              {Platform.OS === 'web' ? (
+                <input
+                  type="datetime-local"
+                  value={newMeeting.scheduledTime}
+                  onChange={(e) => setNewMeeting({...newMeeting, scheduledTime: e.target.value})}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#ddd',
+                    borderRadius: 8,
+                    padding: 12,
+                    marginBottom: 20,
+                    fontSize: 14,
+                    width: '100%',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              ) : (
+                <TextInput
+                  style={styles.input}
+                  placeholder={getDefaultDateTime()}
+                  value={newMeeting.scheduledTime}
+                  onChangeText={(text) => setNewMeeting({...newMeeting, scheduledTime: text})}
+                />
+              )}
 
               <Text style={styles.label}>Password (optional)</Text>
               <TextInput
