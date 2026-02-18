@@ -14,16 +14,19 @@ app.use(cors());
 app.use(express.json());
 
 async function initDb() {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      full_name TEXT NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      role TEXT NOT NULL CHECK(role IN ('admin', 'host', 'member')),
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
+  try {
+    console.log('[INIT] Creating table: users');
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        full_name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        role TEXT NOT NULL CHECK(role IN ('admin', 'host', 'member')),
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    console.log('[INIT] Users table created/verified');
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS meetings (
@@ -171,27 +174,38 @@ app.post('/auth/register', async (req, res) => {
 
 app.post('/auth/login', async (req, res) => {
   try {
+    console.log('[LOGIN] Request received');
     const { email, password } = req.body || {};
     if (!email || !password) {
+      console.log('[LOGIN] Missing email or password');
       return res.status(400).json({ success: false, error: 'Email and password are required.' });
     }
 
+    console.log('[LOGIN] Querying database for user:', email);
     const result = await pool.query('SELECT id, full_name, email, password_hash, role FROM users WHERE email = $1', [email]);
+    console.log('[LOGIN] Database query successful');
+    
     const user = result.rows[0];
     if (!user) {
+      console.log('[LOGIN] User not found');
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
+    console.log('[LOGIN] User found, comparing password');
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
+      console.log('[LOGIN] Password mismatch');
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
+    console.log('[LOGIN] Success, generating token');
     const token = signToken(user);
     delete user.password_hash;
 
+    console.log('[LOGIN] Returning success response');
     return res.json({ success: true, user, token });
   } catch (error) {
+    console.error('[LOGIN] Error:', error.message, error.code);
     return res.status(500).json({ success: false, error: error.message });
   }
 });
