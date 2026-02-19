@@ -28,6 +28,8 @@ async function initDb() {
     `);
     console.log('[INIT] Users table created/verified');
 
+    await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_platform TEXT');
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS meetings (
       id SERIAL PRIMARY KEY,
