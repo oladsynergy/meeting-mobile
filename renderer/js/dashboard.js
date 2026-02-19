@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       totalMembers.textContent = users.length;
       totalHosts.textContent = users.filter((u) => u.role === 'host').length;
       totalAdmins.textContent = users.filter((u) => u.role === 'admin').length;
-      desktopUsers.textContent = users.filter((u) => u.last_platform === 'desktop' || !u.last_platform).length;
-      mobileUsers.textContent = users.filter((u) => u.last_platform === 'mobile').length;
+      desktopUsers.textContent = users.length;
+      mobileUsers.textContent = '0';
       renderMembers(users.slice(0, 5));
     }
 
@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       item.className = 'list-item';
 
       const left = document.createElement('div');
-      const platform = user.last_platform === 'mobile' ? '📱 Mobile' : '🖥️ Desktop';
       left.innerHTML = `
         <h4>${user.full_name}</h4>
         <p>${user.email}</p>
@@ -164,12 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       roleSpan.className = 'badge badge-success';
       roleSpan.textContent = user.role;
 
-      const platformSpan = document.createElement('span');
-      platformSpan.className = `badge ${user.last_platform === 'mobile' ? 'badge-info' : 'badge-secondary'}`;
-      platformSpan.textContent = platform;
-
       rolesContainer.appendChild(roleSpan);
-      rolesContainer.appendChild(platformSpan);
 
       item.appendChild(left);
       item.appendChild(rolesContainer);

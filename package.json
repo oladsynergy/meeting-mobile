@@ -1,6 +1,6 @@
 {
   "name": "islamic-cooperative-meeting-app",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Islamic Cooperative Meeting & Attendance Desktop Application",
   "main": "main/main.js",
   "scripts": {
